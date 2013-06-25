@@ -245,9 +245,14 @@ class UploadHandler
     }
 
     protected function get_file_size($file_path, $clear_stat_cache = false) {
-        if ($clear_stat_cache) {
-            clearstatcache(true, $file_path);
-        }
+        #if ($clear_stat_cache) {
+        #    clearstatcache(true, $file_path);
+        #clearstatcache(true, $src_file); this is causing issues for earlier PHP
+        if (PHP_VERSION_ID < 50300)
+          clearstatcache();
+        else
+          clearstatcache(true, $file_path);
+        #}
         return $this->fix_integer_overflow(filesize($file_path));
 
     }
